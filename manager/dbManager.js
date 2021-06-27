@@ -29,6 +29,15 @@ class dbManager{
     })
   }
 
+  // Get user bank balance
+  getUserBal(uid, res){
+    let q = `SELECT bal FROM users where id = ${uid}`
+    this.db.query(q, async(err, result)=>{
+      if (err){res.json(false)}
+      res.json(result[0].bal)
+    })
+  }
+
   // User buy a stock with sid at the first time
   first_buy(uid, sid, qty, cost){
     return new Promise((resolve, reject)=>{

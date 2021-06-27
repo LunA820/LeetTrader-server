@@ -7,6 +7,11 @@ const db = new dbManager.dbManager();
 const api = new apiManager.apiManager();
 
 
+// Get bank balance of user
+router.post("/getBal", (req,res)=>{
+  db.getUserBal(req.body.uid, res)
+})
+
 // Search stock with stock code (sid)
 router.post("/search", (req, res)=>{
   api.search(req.body.sid)
