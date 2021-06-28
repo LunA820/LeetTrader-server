@@ -31,7 +31,7 @@ class dbManager{
 
   getBank(uid, res){
     let q = `SELECT bal FROM users where id = ${uid}`
-    this.db.query(q, [email, pw], async(err, result)=>{
+    this.db.query(q, async(err, result)=>{
       if (err){return res.json("db_error")}
       res.json(result[0].bal)
     })

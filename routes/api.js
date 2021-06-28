@@ -9,8 +9,7 @@ const api = new apiManager.apiManager();
 
 // Get bank balance of user
 router.post("/getBal", (req,res)=>{
-  db.getBank(req.body.id)
-  .then(data=>{res.send(data)})
+  db.getBank(req.body.uid, res)
 })
 
 // Search stock with stock code (sid)
