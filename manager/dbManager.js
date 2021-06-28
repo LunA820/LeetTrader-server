@@ -30,11 +30,13 @@ class dbManager{
   }
 
   // Get user bank balance
-  getUserBal(uid, res){
-    let q = `SELECT bal FROM users where id = ${uid}`
-    this.db.query(q, async(err, result)=>{
-      if (err){res.json(false)}
-      res.json(result[0].bal)
+  getBank(uid){
+    return new Promise((resolve, rej)=>{
+      let q = `SELECT bal FROM users where id = ${uid}`
+      this.db.query(q, async(err, result)=>{
+        if (err){return resolve("db_error")}
+        return resolve(result[0].bal)
+    })
     })
   }
 
