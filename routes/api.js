@@ -25,25 +25,28 @@ router.post("/buy", (req, res)=>{
   const uid = req.body.uid;
   const sid = req.body.sid;
   const qty = req.body.qty;
+  const cost = req.body.cost;
 
   // Check if qty is negative number
-  if (qty <= 0){res.json("QtyError")}
+  if (qty <= 0){return res.json("NegQty")}
 
   // Check user owned stocks
   db.getOwnedStock(uid, sid)
   .then(result=>{
     // Case 1: User does not have this stock
     if(result === -1){
-      api.search(sid)
-      .then(data=>{return db.first_buy(uid, sid, qty, qty*(data.c))})
-      .then(data => {res.json(data)})
+      db.first_buy(uid, sid, qty, cost)
+      .then(data=>{return res.json(data)})
+      // api.search(sid)
+      // .then(data=>{return db.first_buy(uid, sid, qty, qty*(data.c))})
+      // .then(data => {res.json(data)})
     }
     // Case 2: User already has this stock
-    else{
-      api.search(sid)
-      .then(data=>{return db.buy(uid, sid, qty, qty*(data.c))})
-      .then(data => {res.json(data)})
-    }
+    db.buy(uid, sid, qty, cost)
+    .then(data=>{return res.json(data)})
+    // api.search(sid)
+    // .then(data=>{return db.buy(uid, sid, qty, qty*(data.c))})
+    // .then(data => {res.json(data)})
   })
 })
 
@@ -52,14 +55,17 @@ router.post("/sell", (req, res)=>{
   const uid = req.body.uid;
   const sid = req.body.sid;
   const qty = req.body.qty;
+  const sales = req.body.sales;
 
   // Check if qty is negative number
-  if (qty <= 0){res.json("QtyError")}
+  if (qty <= 0){return res.json("NegQty")}
 
   // Get stock price
-  api.search(sid)
-  .then(data=>{return db.sell(uid, sid, qty, qty*(data.c))})
-  .then(data => {res.json(data)})
+  db.sell(uid, sid, qty, sales)
+  .then(data=>{return res.json(data)})
+  // api.search(sid)
+  // .then(data=>{return db.sell(uid, sid, qty, qty*(data.c))})
+  // .then(data => {res.json(data)})
 })
 
 
