@@ -30,7 +30,7 @@ router.post("/buy", (req, res)=>{
 
   // Check if user has enough credit
   db.getBank2(uid).then(bal => {
-    if (bal < qty*cost){return res.json("Insufficient_fund")}
+    if (bal < cost){return res.json("Insufficient_fund")}
     else{
       db.getOwnedStock(uid, sid)
       .then(result=>{
