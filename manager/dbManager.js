@@ -38,15 +38,15 @@ class dbManager{
   }
 
   // Get user bank balance
-  // getBank(uid){
-  //   return new Promise((resolve, rej)=>{
-  //     let q = `SELECT bal FROM users where id = ${uid}`
-  //     this.db.query(q, (err, result)=>{
-  //       if (err){return resolve("db_error")}
-  //       return resolve(result[0])
-  //     })
-  //   })
-  // }
+  getBank2(uid){
+    return new Promise((resolve, rej)=>{
+      let q = `SELECT bal FROM users where id = ${uid}`
+      this.db.query(q, (err, result)=>{
+        if (err){return resolve("db_error")}
+        return resolve(result[0].bal)
+      })
+    })
+  }
 
   // User buy a stock with sid at the first time
   first_buy(uid, sid, qty, cost){
