@@ -37,16 +37,11 @@ router.post("/buy", (req, res)=>{
     if(result === -1){
       db.first_buy(uid, sid, qty, cost)
       .then(data=>{return res.json(data)})
-      // api.search(sid)
-      // .then(data=>{return db.first_buy(uid, sid, qty, qty*(data.c))})
-      // .then(data => {res.json(data)})
+    }else{
+      // Case 2: User already has this stock
+      db.buy(uid, sid, qty, cost)
+      .then(data=>{return res.json(data)})
     }
-    // Case 2: User already has this stock
-    db.buy(uid, sid, qty, cost)
-    .then(data=>{return res.json(data)})
-    // api.search(sid)
-    // .then(data=>{return db.buy(uid, sid, qty, qty*(data.c))})
-    // .then(data => {res.json(data)})
   })
 })
 
