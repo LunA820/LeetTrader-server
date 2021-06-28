@@ -70,7 +70,7 @@ router.post("/getOwnedStocks", (req, res)=>{
 })
 
 // Get balance sheet of user, return -1 if empty
-router.post("/getBalSheet", (req, res)=>{
+router.post("/getStockList", (req, res)=>{
   db.getAllOwnedStocks(req.body.uid)
   .then(async (data) =>{
     // Calculate total market worth and profit for each stock
@@ -80,6 +80,19 @@ router.post("/getBalSheet", (req, res)=>{
       data[i].profit = Math.floor(data[i].worth - data[i].cost)
     }
     res.json(data)
+  })
+})
+
+// Get market worth of all stocks of user
+router.post("/getStockWorth", (req, res)=>{
+  db.getAllOwnedStocks(req.body.uid)
+  .then(async (data) => {
+    let sum = 0;
+    for (let i = 0; i < data.length; i++){
+      var cur_price = await api.getCurrPrice(data[i].sid)
+      sum += data[i].qty * cur_price
+    }
+    res.json(sum)
   })
 })
 
