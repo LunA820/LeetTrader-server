@@ -9,7 +9,7 @@ const api = new apiManager.apiManager();
 
 // Get bank balance of user
 router.post("/getBal", (req,res)=>{
-  db.getBank(req.id)
+  db.getBank(req.body.id)
   .then(data=>{res.send(data)})
 })
 
@@ -30,22 +30,16 @@ router.post("/buy", (req, res)=>{
   if (qty <= 0){return res.json("NegQty")}
 
   // Check if user has enough credit
-  db.getBank(uid).then(bal=>{
-    if (bal < qty*cost){return res.json("Insufficient_fund")}
-    else{
-      // Check user owned stocks
-      db.getOwnedStock(uid, sid)
-      .then(result=>{
-        // Case 1: User does not have this stock
-        if(result === -1){
-          db.first_buy(uid, sid, qty, cost)
-          .then(data=>{return res.json(data)})
-        }else{
-          // Case 2: User already has this stock
-          db.buy(uid, sid, qty, cost)
-          .then(data=>{return res.json(data)})
-        }
-      })
+  db.getOwnedStock(uid, sid)
+  .then(result=>{
+    // Case 1: User does not have this stock
+    if(result == -1){
+      db.first_buy(uid, sid, qty, cost)
+      .then(data=>{return res.json(data)})
+    }else{
+      // Case 2: User already has this stock
+      db.buy(uid, sid, qty, cost)
+      .then(data=>{return res.json(data)})
     }
   })
 })

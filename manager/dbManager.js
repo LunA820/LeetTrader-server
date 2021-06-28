@@ -29,16 +29,24 @@ class dbManager{
     })
   }
 
-  // Get user bank balance
-  getBank(uid){
-    return new Promise((resolve, rej)=>{
-      let q = `SELECT bal FROM users where id = ${uid}`
-      this.db.query(q, async(err, result)=>{
-        if (err){return resolve("db_error")}
-        return resolve(result[0].bal)
-    })
+  getBank(uid, res){
+    let q = `SELECT bal FROM users where id = ${uid}`
+    this.db.query(q, [email, pw], async(err, result)=>{
+      if (err){return res.json("db_error")}
+      res.json(result[0].bal)
     })
   }
+
+  // Get user bank balance
+  // getBank(uid){
+  //   return new Promise((resolve, rej)=>{
+  //     let q = `SELECT bal FROM users where id = ${uid}`
+  //     this.db.query(q, (err, result)=>{
+  //       if (err){return resolve("db_error")}
+  //       return resolve(result[0])
+  //     })
+  //   })
+  // }
 
   // User buy a stock with sid at the first time
   first_buy(uid, sid, qty, cost){
