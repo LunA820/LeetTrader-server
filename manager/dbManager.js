@@ -11,11 +11,11 @@ class dbManager{
   }
 
   // Register new user
-  register(name, email, pw, res){
+  register(email, pw, res){
     let q = 'INSERT INTO users SET ?'
-    this.db.query(q, {name: name, email: email, password: pw }, async(err, result)=>{
-      if (err){res.json(-1)}
-      res.json("success") 
+    this.db.query(q, {email: email, password: pw }, async(err, result)=>{
+      if (err){res.json(false)}
+      res.json(true) 
     })
   }
 

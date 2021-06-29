@@ -46,18 +46,6 @@ router.post("/buy", (req, res)=>{
       })
     }
   })
-  // db.getOwnedStock(uid, sid)
-  // .then(result=>{
-  //   // Case 1: User does not have this stock
-  //   if(result == -1){
-  //     db.first_buy(uid, sid, qty, cost)
-  //     .then(data=>{return res.json(data)})
-  //   }else{
-  //     // Case 2: User already has this stock
-  //     db.buy(uid, sid, qty, cost)
-  //     .then(data=>{return res.json(data)})
-  //   }
-  // })
 })
 
 // Sell stock at current market price
@@ -73,9 +61,6 @@ router.post("/sell", (req, res)=>{
   // Get stock price
   db.sell(uid, sid, qty, sales)
   .then(data=>{return res.json(data)})
-  // api.search(sid)
-  // .then(data=>{return db.sell(uid, sid, qty, qty*(data.c))})
-  // .then(data => {res.json(data)})
 })
 
 
