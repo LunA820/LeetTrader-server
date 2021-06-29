@@ -1,3 +1,4 @@
+const { json } = require('express')
 const mysql = require('mysql')
 
 class dbManager{
@@ -16,6 +17,19 @@ class dbManager{
     this.db.query(q, {email: email, password: pw }, async(err, result)=>{
       if (err){res.json(false)}
       res.json(true) 
+    })
+  }
+
+  // Reset user
+  reset(uid, res){
+    let q1 = `UPDATE users SET bal = 100000 where id = ${uid}`
+    let q2 = `DELETE FROM ownedStocks where uid = ${uid}`
+    this.db.query(q1, async(err, result)=>{
+      if(err){return res.json(false)}
+      this.db.query(q2, async(err2, result2)=>{
+        if(err2){return res.json(false)}
+        res.json(true)
+      })
     })
   }
 

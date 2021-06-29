@@ -14,5 +14,10 @@ router.post("/login", (req, res)=>{
   db.login(req.body.email, req.body.password, res)
 })
 
+// Reset user account
+router.post("/reset", (req, res)=>{
+  db.reset(req.body.uid, res)
+})
+
 
 module.exports = router;
