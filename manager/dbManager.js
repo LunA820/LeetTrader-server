@@ -11,12 +11,12 @@ class dbManager{
     })
   }
 
-  // Register new user
+  // Register new user, login if success, return false if fail
   register(email, pw, res){
     let q = 'INSERT INTO users SET ?'
     this.db.query(q, {email: email, password: pw }, async(err, result)=>{
       if (err){res.json(false)}
-      res.json(true) 
+      else{this.login(email, pw, res)}
     })
   }
 
@@ -43,20 +43,13 @@ class dbManager{
     })
   }
 
-  getBank(uid, res){
-    let q = `SELECT bal FROM users where id = ${uid}`
-    this.db.query(q, async(err, result)=>{
-      if (err){return res.json("db_error")}
-      res.json(result[0].bal)
-    })
-  }
-
   // Get user bank balance
-  getBank2(uid){
+  getBank(uid){
     return new Promise((resolve, rej)=>{
       let q = `SELECT bal FROM users where id = ${uid}`
       this.db.query(q, (err, result)=>{
         if (err){return resolve("db_error")}
+        if (result.length == 0){return resolve("uid_not_exist")}
         return resolve(result[0].bal)
       })
     })
