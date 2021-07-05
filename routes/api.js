@@ -9,13 +9,15 @@ const api = new apiManager.apiManager();
 
 // Get bank balance of user
 router.post("/getBal", (req,res)=>{
-  db.getBank(req.body.uid, res)
+  db.getBank(req.body.uid).then(result=>{
+    return res.json(result)
+  })
 })
 
 // Search stock with stock code (sid)
 router.post("/search", (req, res)=>{
   api.search(req.body.sid)
-  .then(data => {res.send(data)})
+  .then(data => {return res.send(data)})
 })
 
 // Buy stock at current market price
@@ -29,7 +31,7 @@ router.post("/buy", (req, res)=>{
   if (qty <= 0){return res.json("NegQty")}
 
   // Check if user has enough credit
-  db.getBank2(uid).then(bal => {
+  db.getBank(uid).then(bal => {
     if (bal < cost){return res.json("Insufficient_fund")}
     else{
       db.getOwnedStock(uid, sid)
