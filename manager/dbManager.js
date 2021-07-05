@@ -1,5 +1,7 @@
 const { json } = require('express')
 const mysql = require('mysql')
+const bcrypt = require('bcrypt')
+
 
 class dbManager{
   constructor(){
@@ -12,12 +14,17 @@ class dbManager{
   }
 
   // Register new user, login if success, return false if fail
-  register(email, pw, res){
-    let q = 'INSERT INTO users SET ?'
-    this.db.query(q, {email: email, password: pw }, async(err, result)=>{
-      if (err){res.json(false)}
-      else{this.login(email, pw, res)}
-    })
+  async register(email, pw, res){
+    try{
+      const hashedPw = await bcrypt.hash(pw, 10)
+      let q = 'INSERT INTO users SET ?'
+      this.db.query(q, {email: email, password: hashedPw }, async(err, result)=>{
+        if (err){res.json(false)}
+        else{this.login(email, pw, res)}
+      })
+    }catch{
+      res.json(false)
+    }    
   }
 
   // Reset user
@@ -35,11 +42,17 @@ class dbManager{
 
   // User login by email & password
   login(email, pw, res){
-    let q = 'SELECT id FROM users WHERE email = ? AND password = ?'
-    this.db.query(q, [email, pw], async(err, result)=>{
-      if (err){console.log(err)}
-      if (result.length==0){res.json(-1)}
-      else{res.json(result[0].id)}
+    let q = `SELECT id, password FROM users WHERE email = "${email}"`
+    this.db.query(q, async(err, result)=>{
+      if (err){return res.json(-1)}
+      if (result.length === 0){return res.json(-1)}
+
+      // Check hashed password, return user ID if succcess
+      bcrypt.compare(pw, result[0].password)
+      .then(check=>{
+        if(check){return res.json(result[0].id)}
+        else{return res.json(-1)}
+      })
     })
   }
 
