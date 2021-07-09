@@ -77,7 +77,7 @@ router.get("/getStockList/:uid", (req, res)=>{
     for (let i = 0; i < data.length; i++){
       var cur_price = await api.getCurrPrice(data[i].sid)
       data[i].worth = data[i].qty * cur_price
-      data[i].profit = Math.floor(data[i].worth - data[i].cost)
+      data[i].profit = (data[i].worth - data[i].cost).toFixed(2)
     }
     res.json(data)
   })
