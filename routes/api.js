@@ -8,17 +8,19 @@ const api = new apiManager.apiManager();
 
 
 // Get bank balance of user
-router.post("/getBal", (req,res)=>{
-  db.getBank(req.body.uid).then(result=>{
+router.get("/getBal/:uid", (req,res)=>{
+  db.getBank(req.params.uid).then(result=>{
     return res.json(result)
   })
 })
 
-// Search stock with stock code (sid)
-router.post("/search", (req, res)=>{
-  api.search(req.body.sid)
-  .then(data => {return res.send(data)})
+
+// Get stock information with Stock ID
+router.get("/search/:sid", (req, res)=>{
+  api.search(req.params.sid)
+  .then(data=>{return res.send(data)})
 })
+
 
 // Buy stock at current market price
 router.post("/buy", (req, res)=>{
@@ -50,6 +52,7 @@ router.post("/buy", (req, res)=>{
   })
 })
 
+
 // Sell stock at current market price
 router.post("/sell", (req, res)=>{
   const uid = req.body.uid;
@@ -66,15 +69,9 @@ router.post("/sell", (req, res)=>{
 })
 
 
-// Get stocks list of user, return -1 if empty
-router.post("/getOwnedStocks", (req, res)=>{
-  db.getAllOwnedStocks(req.body.uid)
-  .then(data => {res.json(data)})
-})
-
-// Get balance sheet of user, return -1 if empty
-router.post("/getStockList", (req, res)=>{
-  db.getAllOwnedStocks(req.body.uid)
+// Get owned stock list of user, return -1 if empty
+router.get("/getStockList/:uid", (req, res)=>{
+  db.getAllOwnedStocks(req.params.uid)
   .then(async (data) =>{
     // Calculate total market worth and profit for each stock
     for (let i = 0; i < data.length; i++){
@@ -86,9 +83,10 @@ router.post("/getStockList", (req, res)=>{
   })
 })
 
-// Get market worth of all stocks of user
-router.post("/getStockWorth", (req, res)=>{
-  db.getAllOwnedStocks(req.body.uid)
+
+// Get market worth of all owned stocks of user
+router.get("/getStockWorth/:uid", (req, res)=>{
+  db.getAllOwnedStocks(req.params.uid)
   .then(async (data) => {
     let sum = 0;
     for (let i = 0; i < data.length; i++){
@@ -96,16 +94,6 @@ router.post("/getStockWorth", (req, res)=>{
       sum += data[i].qty * cur_price
     }
     res.json(sum)
-  })
-})
-
-
-// =============================== For Debug
-router.post("/changeBal", (req, res)=>{
-  const uid = req.body.uid
-  const x = req.body.x
-  db.changeBal(uid, x).then(result=>{
-    res.json(result)
   })
 })
 
