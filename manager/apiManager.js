@@ -27,6 +27,15 @@ class apiManager{
     })
   }
 
+  getDiff(sid){
+    return new Promise((resolve, rej)=>{
+      this.search(sid).then(data=>{
+        if (data === -1){return resolve(-1)}
+        resolve(data.c - data.pc)
+      })
+    })
+  }
+
 };
 
 
